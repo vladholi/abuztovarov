@@ -212,7 +212,12 @@
     return t.replace(/(\d+)\s*(gb|tb)\b/g, '$1').replace(/(\d+)\s*v\b/g, '$1v').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
   }
   function tokens(s) {
-    return [...new Set(normalize(s).split(/\s+/).filter(w => w && w.length > 1 && !['продам','продаю','новый','новая','бу','срочно','торг','хорошее','идеальное','состояние','оригинал','отличный','доставка','комплект'].includes(w)))];
+    // Single digits identify generations. Series S/X are distinct Xbox models.
+    const words = normalize(s).split(/\s+/);
+    return [...new Set(words.filter((w, i) => {
+      if (w.length === 1) return /^\d$/.test(w) || (words[i - 1] === 'series' && /^[sx]$/.test(w));
+      return w && !['продам','продаю','новый','новая','бу','срочно','торг','хорошее','идеальное','состояние','оригинал','отличный','доставка','комплект'].includes(w);
+    }))];
   }
   function comparable(a, b, query) {
     const at = tokens(a), bt = tokens(b), qt = tokens(query);
@@ -222,9 +227,8 @@
     const qNumbers = qt.filter(x => /\d/.test(x));
     if (qNumbers.some(x => !as.has(x) || !bs.has(x))) return false;
     // For short generic queries, different model numbers must not become comparables.
-    const numericA = at.filter(x => /\d/.test(x)).sort().join('|');
-    const numericB = bt.filter(x => /\d/.test(x)).sort().join('|');
-    if (numericA !== numericB) return false;
+    const modelIds = words => words.filter(w => /\d/.test(w) || /^[sx]$/.test(w)).sort().join('|');
+    if (modelIds(at) !== modelIds(bt)) return false;
     const queryWords = qt.filter(x => x.length >= 3);
     if (queryWords.some(x => !as.has(x) || !bs.has(x))) return false;
     // Both titles must share most model-related parts, not just a generic product type.

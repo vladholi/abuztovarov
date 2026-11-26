@@ -90,6 +90,20 @@ assert.equal(financials(manual[0],{...opts,costs:15000}).eligible,false,'No nega
 const none = estimate([rows[0]],{query:'iPhone 13 128 GB',mode:'auto'});
 assert.equal(winners(none,opts).length,0,'No auto price without comparable offers');
 
+for (const [query, otherModel, family] of [
+  ['PlayStation 5', 'PlayStation 4', 'PlayStation'],
+  ['Xbox Series X', 'Xbox Series S', 'Xbox Series']
+]) {
+  const listings = [otherModel, query, query, query, query].map((title, id) => ({
+    title, id: String(id), price: id === 0 ? 1000 : 10000
+  }));
+  assert(!matchesQuery(otherModel, query));
+  assert(!comparable(query, otherModel, family));
+  assert.equal(winners(estimate(listings, { query }), opts).length, 0);
+  listings[0].title = query;
+  assert.equal(winners(estimate(listings, { query }), opts)[0].id, '0');
+}
+
 // Location input must never silently turn into nationwide /all searches.
 const L = require('./location.js');
 const moscow = L.resolveScope('Москва').scope;
