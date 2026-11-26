@@ -1,0 +1,26 @@
+name: Extension checks and package
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check JavaScript
+        run: |
+          for file in avito-margin-scout-v6/*.js; do node --check "$file"; done
+          node avito-margin-scout-v6/tests.js
+          node --test tests/dashboard-export.cjs
+      - run: python3 scripts/package_extension.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: avito-margin-scout
+          path: dist/*.zip
+          if-no-files-found: error

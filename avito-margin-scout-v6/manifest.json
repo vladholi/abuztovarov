@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Авито Маржа — поиск выгодных предложений",
-  "version": "6.0.0",
-  "description": "Ручной поиск и автопоиск по встроенным и собственным товарным моделям: поиск строго в выбранном городе или регионе; отрицательная прибыль исключается.",
+  "version": "6.0.1",
+  "description": "Поиск объявлений Авито в выбранном регионе и оценка возможной прибыли от перепродажи по ценам похожих предложений.",
   "permissions": ["storage", "tabs", "scripting", "notifications"],
   "host_permissions": ["https://www.avito.ru/*", "https://avito.ru/*"],
   "background": {"service_worker": "background.js"},

@@ -338,11 +338,16 @@ function renderHistory() {
     box.append(b);
   }
 }
+function csvCell(value) {
+  let text = String(value ?? '');
+  if (typeof value === 'string' && /^[\s\u0000-\u001f]*[=+@\-＝＋＠－]/u.test(text)) text = "'" + text;
+  return '"' + text.replace(/"/g, '""') + '"';
+}
 function exportCsv() {
   const data = visible();
   if (!data.length) { setStatus('Нет подходящих объявлений для экспорта.'); return; }
   const cols = ['group', 'query', 'scopeLabel', 'location', 'title', 'price', 'reference', 'profit', 'margin', 'comparables', 'isNew', 'url'];
-  const records = [cols.join(';'), ...data.map(r => cols.map(k => `"${String(r[k] ?? '').replace(/"/g, '""')}"`).join(';'))];
+  const records = [cols.join(';'), ...data.map(r => cols.map(k => csvCell(r[k])).join(';'))];
   const blob = new Blob(['\ufeff' + records.join('\r\n')], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob), a = document.createElement('a');
   a.href = url; a.download = `avito-profit-${new Date().toISOString().slice(0,10)}.csv`; a.click();
