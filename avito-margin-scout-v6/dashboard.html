@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="style.css"><title>Авито Маржа 6.0</title>
+</head>
+<body><main>
+<header><div><div class="eyebrow">ПОИСК ВОЗМОЖНОСТЕЙ ДЛЯ ПЕРЕПРОДАЖИ</div><h1>Авито Маржа <span>6.0</span></h1><p>Проверка предложений и расчёт возможной прибыли</p></div><div class="logo">₽</div></header>
+<section class="panel main-panel">
+  <h2>Два режима поиска</h2>
+  <div class="search-modes">
+    <div class="mode"><div class="mode-header"><strong>🔎 Поиск конкретного товара</strong><small>4 запроса по твоему названию</small></div>
+      <label>Название товара<input id="query" type="search" placeholder="Например: iPhone 13 128 ГБ"></label>
+      <button id="scan" class="primary">Искать мой товар</button>
+    </div>
+    <div class="mode mode-auto"><div class="mode-header"><strong>⚡ Автопоиск всего</strong><small id="catalogCount">По готовым товарным направлениям</small></div>
+      <p>Каждый запуск — новые модели и формулировки запросов. Расширение помнит предыдущие поиски и постепенно перебирает весь список, затем повторяет с другими формулировками.</p>
+      <button id="scanAuto" class="primary">🚀 Автопоиск всего — новый набор</button>
+      <details class="auto-details"><summary id="lastAutoCount">Последние запросы: пока нет</summary><ol id="autoQueries"><li>Запусти поиск, чтобы увидеть запросы.</li></ol></details>
+    </div>
+  </div>
+  <section class="personal-catalog" aria-labelledby="personalHeading">
+    <div class="personal-heading">
+      <div><h3 id="personalHeading">⭐ Мои товары для автопоиска <span id="personalCount" class="counter">0</span></h3>
+        <p>Добавляй свои бренды и модели: они будут участвовать в автопоиске вместе со встроенными товарами. До 8 мест в каждом запуске выделяются для твоих запросов.</p></div>
+    </div>
+    <label for="personalInput">Товары или поисковые запросы (через запятую или с новой строки)</label>
+    <div class="personal-add">
+      <textarea id="personalInput" rows="3" maxlength="12000" placeholder="Dyson Airwrap HS01&#10;Makita DDF482&#10;PlayStation 5 Slim"></textarea>
+      <button id="addPersonal" class="secondary" type="button">+ Добавить в автопоиск</button>
+    </div>
+    <p id="personalStatus" class="helper" role="status" aria-live="polite">Добавленные товары сохраняются в Chrome даже после закрытия браузера.</p>
+    <div class="personal-controls">
+      <label class="checkbox"><input id="onlyPersonal" type="checkbox"> Искать только мои товары</label>
+      <button id="clearPersonal" class="danger small" type="button">Удалить все мои товары</button>
+    </div>
+    <div id="personalList" class="personal-list" aria-label="Добавленные товары"><span class="muted">Твой список пока пуст.</span></div>
+  </section>
+  <h3>Фильтр доходности</h3>
+  <div class="grid">
+    <label>Город или регион поиска <span class="required">(обязательно)</span><input id="city" placeholder="Например: Тула, Краснодарский край или ссылка Авито" autocomplete="off" required></label>
+    <label>Максимальная цена покупки, ₽<input id="maxPrice" type="number" min="0" placeholder="Без ограничения"></label>
+    <label>Расходы на сделку, ₽<input id="costs" type="number" min="0" value="500"></label>
+    <label>Минимальная прибыль, ₽<input id="minProfit" type="number" min="0" value="1500"></label>
+    <label>Минимальная маржа, %<input id="minMargin" type="number" min="0" value="20"></label>
+    <label>Моя цена перепродажи, ₽ <span class="hint">(только ручной поиск)</span><input id="resale" type="number" min="0" placeholder="Иначе сравнение с рынком"></label>
+  </div>
+  <p id="regionHint" class="scope-warning" role="status" aria-live="polite">Укажи город или регион. При неизвестном названии вставь ссылку на выбранное место с Авито. «Вся Россия» — только по твоему выбору.</p>
+  <div class="actions">
+    <button id="stop" class="secondary" disabled>Остановить поиск</button>
+    <button id="export" class="secondary">Скачать прибыльные (CSV)</button>
+    <button id="clear" class="danger">Очистить историю</button>
+  </div>
+  <p id="status" class="status" role="status" aria-live="polite">Выбери режим: поиск товара или автопоиск всего.</p>
+  <div class="progress" aria-hidden="true"><div id="progressFill"></div></div>
+  <p class="note">Здесь показываются <strong>только объявления с положительной расчётной прибылью из выбранного города/региона</strong>, которые проходят твои пороги. Неопределённое местоположение исключается — поэтому часть объявлений может не попасть в результаты. Сравниваются цены активных объявлений, а не реальные продажи. «Автопоиск всего» по очереди проверяет разные модели из встроенного и твоего списков; список не является измеренным рейтингом спроса и не охватывает весь Авито. При ограничениях сайта проверка останавливается; защиты не обходятся.</p>
+</section>
+<section class="panel">
+<div class="bar"><div><h2>Подходящие варианты <span id="count" class="counter">0</span></h2><p class="sub" id="summary">Появятся после поиска</p></div><label class="checkbox"><input type="checkbox" id="onlyNew"> Только впервые найденные</label></div>
+<div id="results" class="cards"><div class="empty">Пока нечего показывать. Запусти поиск.</div></div>
+</section>
+<section class="panel"><h2>История запусков</h2><div id="history" class="history"><span class="muted">История пуста</span></div></section>
+<footer>Прототип · Локальное хранение · Уведомления о новых подходящих объявлениях после окончания поиска · Не является гарантией прибыли</footer>
+</main><script src="engine.js"></script><script src="location.js"></script><script src="dashboard.js"></script></body></html>
